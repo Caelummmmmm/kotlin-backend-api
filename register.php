@@ -3,8 +3,8 @@ require_once 'db.php';
 
 $pdo = getConnection();
 
-$rawInput = file_get_contents('php://input');
-$input = json_decode($rawInput, true) ?? []; 
+// 🔥 FIX: Match your Kotlin @FormUrlEncoded fields by pulling directly from $_POST
+$input = $_POST; 
 
 function required(array $input, array $fields): void {
     foreach ($fields as $field) {
