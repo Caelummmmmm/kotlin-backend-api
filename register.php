@@ -2,7 +2,9 @@
 require_once 'db.php';
 
 $pdo = getConnection();
-$input = $_POST;
+
+$rawInput = file_get_contents('php://input');
+$input = json_decode($rawInput, true) ?? []; 
 
 function required(array $input, array $fields): void {
     foreach ($fields as $field) {
@@ -26,7 +28,7 @@ try {
     }
 
     $stmt = $pdo->prepare(
-        'INSERT INTO tblusers (username, last_name, first_name, middle_name, email, password, photo)
+        'INSERT INTO tblusers (username, last_name, first_name, middle_name, email, password, photo) 
          VALUES (?, ?, ?, ?, ?, ?, ?)'
     );
 
