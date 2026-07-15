@@ -1,10 +1,9 @@
 FROM php:8.2-apache
 
-# Install the MySQL extension so your PHP script can communicate with MySQL
-RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
+# Install both standard mysqli AND the missing pdo_mysql extension
+RUN docker-php-ext-install mysqli pdo_mysql \
+    && docker-php-ext-enable mysqli pdo_mysql
 
-# Copy your local PHP files into the container's web server folder
 COPY . /var/www/html/
 
-# Expose port 80 for web traffic
 EXPOSE 80
