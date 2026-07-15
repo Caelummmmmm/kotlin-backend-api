@@ -1,27 +1,23 @@
 <?php
 function getConnection(): PDO {
-    // 1. Updated cloud credentials from your Aiven dashboard
     $host = 'kotlin-mysql-db-factgroupkotlin.d.aivencloud.com';
-    $port = 24980; // Explicit cloud port
-    $db   = 'defaultdb'; // Aiven default database layout
+    $port = 24980; 
+    $db   = 'defaultdb'; 
     $user = 'avnadmin';
-    
-    // 2. Click the eye icon next to Password on your Aiven panel to copy your real string
-    $pass = 'AVNS_wWn3H-UARohoi503bCB'; 
+    $pass = 'AVNS_wWn3H-UARohoi503bCB'; // Double check this matches your Aiven dashboard!
 
-    return new PDO(
+    // 1. Create the base PDO instance without driver array options
+    $pdo = new PDO(
         "mysql:host=$host;port=$port;dbname=$db;charset=utf8mb4",
         $user,
-        $pass,
-        [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            
-            // 3. Mandatory Aiven security properties (Fixes Public Key Retrieval and SSL errors)
-            PDO::MYSQL_ATTR_SSL_CA => true,
-            PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false,
-        ]
+        $pass
     );
+
+    // 2. Set standard attributes safely
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    
+    return $pdo;
 }
 
 function respond(array $data, int $status = 200): void {
